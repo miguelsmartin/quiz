@@ -10,9 +10,11 @@ var Quiz = sequelize.import(path.join(__dirname, 'quiz'));
 sequelize.sync().then(function(){
 	return Quiz.count().then(function(c){
 		if(c===0){
-			return Quiz.create({quesiton: 'Capital de Italia', answer: 'Roma'}).then(function(){
+			return Quiz.bulkCreate([{question: 'Capital de Italia', answer: 'Roma'},
+									{question: 'Capital de Portugal', answer: 'Lisboa'}
+									]).then(function(){
 				console.log('Base de datos inicializada con datos');
-			})
+			});
 		}
 	});
 }).catch(function(error){
