@@ -64,3 +64,25 @@ exports.check = function(req, res) {
 			next(error);
 		});	
 };
+
+exports.search = function(req,res,next){
+	var busqueda= req.query.search;
+	models.Quiz.findAll()
+		.then(function(quizzes) {
+			for(var i in quizzes){
+
+
+			if(busqueda.test(quizzes[i].question)){
+				var question = quizzes[i].question;
+			} else{
+				var question = "No se encontró ninguna pregunta";
+			}
+			}
+			res.render('quizzes/search.ejs', { quizzes: quizzes, question: question});
+		})
+		.catch(function(error) {
+			next(error);
+		});
+				
+
+};
