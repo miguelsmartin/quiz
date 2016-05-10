@@ -18,7 +18,7 @@ exports.index = function(req, res, next) {
 		models.Quiz.findAll()
 		.then(
 			function(quizzes) {
-			res.send(quizzes);
+			res.send(JSON.stringify(quizzes));
 		})
 		.catch(function(error) {
 			next(error);
@@ -43,7 +43,7 @@ exports.show = function(req, res, next) {
 		models.Quiz.findById(req.params.quizId)
 		.then(function(quiz) {
 			if (quiz) {
-				res.send(quiz);
+				res.send(JSON.stringify(quiz));
 			} else {
 		    	throw new Error('No existe ese quiz en la BBDD.');
 		    }
