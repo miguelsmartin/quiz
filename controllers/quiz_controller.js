@@ -15,13 +15,30 @@ var models = require('../models');
 
 // GET /quizzes
 exports.index = function(req, res, next) {
-	models.Quiz.findAll()
-		.then(function(quizzes) {
+	
+
+    if(req.query.search !== undefined){
+    	var searchAux = req.query.search.replace("","%");
+    	models.Quiz.findAll({where: {question: {$like: ('%' + searchAux + '%')}}}).then(
+			function(quizzes) {
 			res.render('quizzes/index.ejs', { quizzes: quizzes});
 		})
 		.catch(function(error) {
 			next(error);
 		});
+				//res.render('quizzes/index.ejs');
+
+	}else{
+	models.Quiz.findAll()
+		.then(
+			function(quizzes) {
+			res.render('quizzes/index.ejs', { quizzes: quizzes});
+		})
+		.catch(function(error) {
+			next(error);
+		});
+
+	}
 };
 
 
@@ -65,7 +82,7 @@ exports.check = function(req, res) {
 		});	
 };
 
-exports.search = function(req,res,next){
+/*exports.search = function(req,res,next){
 	var busqueda= req.query.search;
 	models.Quiz.findAll()
 		.then(function(quizzes) {
@@ -85,4 +102,4 @@ exports.search = function(req,res,next){
 		});
 				
 
-};
+};*/
