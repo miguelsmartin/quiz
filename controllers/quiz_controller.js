@@ -26,8 +26,15 @@ exports.index = function(req, res, next) {
 		.catch(function(error) {
 			next(error);
 		});
-				//res.render('quizzes/index.ejs');
-
+	}else if(req.params.format == 'json'){
+		models.Quiz.findAll()
+		.then(
+			function(quizzes) {
+			res.send(quizzes);
+		})
+		.catch(function(error) {
+			next(error);
+		});
 	}else{
 	models.Quiz.findAll()
 		.then(
@@ -44,6 +51,19 @@ exports.index = function(req, res, next) {
 
 // GET /quizzes/:id
 exports.show = function(req, res, next) {
+	if(req.params.format == "json"){
+		models.Quiz.findById(req.params.quizId)
+		.then(function(quiz) {
+			if (quiz) {
+				res.send(quiz);
+			} else {
+		    	throw new Error('No existe ese quiz en la BBDD.');
+		    }
+		})
+		.catch(function(error) {
+			next(error);
+		});
+	}else{
 	models.Quiz.findById(req.params.quizId)
 		.then(function(quiz) {
 			if (quiz) {
@@ -58,6 +78,7 @@ exports.show = function(req, res, next) {
 		.catch(function(error) {
 			next(error);
 		});
+	}
 };
 
 
