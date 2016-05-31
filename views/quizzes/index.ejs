@@ -1,18 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Quiz</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-  	<nav>
-<ul>
-    <li><a href="/author">Créditos</a></li> 
-    <li><a href="/quizzes">Preguntas</a></li>   
-</ul>
-</nav>
-    <h1>Quiz</h1>
-    <h2>Bienvenido a Quiz , el juego de las preguntas.</h2>
+
     <p><a href="/quizzes"> Comience a jugar. </a></p>
     <table>
   <% for(var i in quizzes){ %>
@@ -20,6 +6,15 @@
       <td>
         <a href="/quizzes/<%= quizzes[i].id %>"><%= quizzes[i].question %></a>
       </td>
+      <td>
+           <a href="/quizzes/<%= quizzes[i].id %>/edit"><button>editar</button></a>
+         </td>
+      <td>
+            <a href="/quizzes/<%= quizzes[i].id %>?_method=DELETE" 
+               onClick="return confirm('Borrar: <%= quizzes[i].question %>');">
+               <button>borrar</button>
+            </a>
+        </td>
     </tr>
   <% } %>
 </table>
