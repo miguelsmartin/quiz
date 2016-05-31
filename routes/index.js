@@ -9,14 +9,19 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/author', function(req, res, next) {
-  res.render('author', { title: 'Quiz' });
-  res.render('author', {authors: 'Miguel Sánchez Martín'});
+  res.render('author', { title: 'Quiz'});
+  //res.render('author', {authors: 'Miguel Sánchez Martín'});
 });
+
+//Autoload de rutas que usen :quizId
+router.param('quizId', quizController.load); //autoload: quizId
 
 // Definición de rutas de /quizzes
 router.get('/quizzes.:format?',                     quizController.index);
 router.get('/quizzes/:quizId(\\d+).:format?',       quizController.show);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
+router.get('/quizzes/new', quizController.new);
+router.post('/quizzes', quizController.create);
 
 
 module.exports = router;
