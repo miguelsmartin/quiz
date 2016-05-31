@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/author', function(req, res, next) {
-  res.render('author', { title: 'Quiz'});
+  res.render('author');
   //res.render('author', {authors: 'Miguel Sánchez Martín'});
 });
 
