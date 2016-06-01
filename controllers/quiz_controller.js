@@ -71,8 +71,8 @@ exports.show = function(req, res, next) {
 
 
 // Autoload el quiz asociado a :quizId
- exports.load = function(req, res, next, quizId) {
- 	models.Quiz.findById(quizId)
+ exports.load = function(req, res, next, quizId) { //SIEMPRE QUE QUIZID
+ 	models.Quiz.findById(quizId, {include: [models.Comment]}) //BUSCO EL QUIZ CON ID QUIZID Y ME DEVUELVE
    		.then(function(quiz) {
        		if (quiz) {
          		req.quiz = quiz;
