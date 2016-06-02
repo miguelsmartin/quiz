@@ -35,7 +35,7 @@ var User = sequelize.import(path.join(__dirname,'user'));
 
 // Relaciones entre modelos
 Comment.belongsTo(Quiz); //comment es una tabla asociada a quiz 
-Quiz.hasMany(Comment); // relacion 1-N
+Quiz.hasMany(Comment); // relacion 1-N (un quiz, muchos comments)
 
 
 exports.Quiz = Quiz; // exportar definición de tabla Quiz

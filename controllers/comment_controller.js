@@ -22,8 +22,7 @@ exports.create = function(req, res, next) {
   comment.save()
     .then(function(comment) {
       req.flash('success', 'Comentario creado con éxito.');
-      //res.redirect('/quizzes/' + req.quiz.id);
-      path.join('/quizzes/',req.quiz.id);
+      res.redirect('/quizzes/' + req.quiz.id);
     }) 
 	  .catch(Sequelize.ValidationError, function(error) {
 
