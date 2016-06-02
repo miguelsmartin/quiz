@@ -71,9 +71,15 @@ exports.show = function(req, res, next) {
 		.then(function(quiz) {
 			if (quiz) {
 				var answer = req.query.answer || '';
-
-				res.render('quizzes/show', {quiz: req.quiz,
-											answer: answer});
+				models.User.findAll()
+        .then(function(users) {
+	
+				 res.render('quizzes/show', {quiz: req.quiz,
+											answer: answer,
+											users:users
+										});
+				 });
+				
 			} else {
 		    	throw new Error('No existe ese quiz en la BBDD.');
 		    }

@@ -22,8 +22,17 @@
 <ul>
   <% for (var i in quiz.Comments) { 
        var comment = quiz.Comments[i];
-       if (comment.accepted) { %>
-           <li> <%= comment.text %> </li>
+       var username = "";
+       if (comment.accepted) { 
+       for(var i in users){
+             if( users[i].id === comment.AuthorId){
+              username = users[i].username;
+             }
+          } %>
+        <td>
+          <tr>  <li><%= comment.text %></li></tr>
+          <tr>Autor: <%= username %></tr>
+        </td> 
        <% } else if (session.user && 
                      (session.user.isAdmin || (quiz.AuthorId === session.user.id))) { %>
            <li> <%= comment.text %> </li>
