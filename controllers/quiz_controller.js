@@ -115,7 +115,7 @@ exports.show = function(req, res, next) {
 
  
  // guarda en DB los campos pregunta y respuesta de quiz
-   quiz.save({fields: ["question", "answer"]})
+   quiz.save({fields: ["question", "answer", "AuthorId"]})
    	.then(function(quiz) {
    		req.flash('success','Quiz creado con éxito.');
      	res.redirect('/quizzes');  // res.redirect: Redirección HTTP a lista de preguntas

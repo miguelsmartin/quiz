@@ -3,6 +3,15 @@ var Sequelize = require('sequelize');
 var url = require('url');
 
 
+//Middleware de caducidad de sesión
+exports.autologout = function(req, res, next) {
+         if (req.session.user ) {
+            if (req.session.user.expires &&(req.session.user.expires < Date.now())) {
+               delete req.session.user;
+           } else {
+              req.session.user.expires = Date.now()+12000;
+} }
+next(); };
 
 // Middleware: Se requiere hacer login.
 //
