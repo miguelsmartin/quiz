@@ -45,8 +45,11 @@ exports.new = function(req, res, next) {
 
 // POST /users
 exports.create = function(req, res, next) {
+
+    var authorId = req.session.user && req.session.user.id || 0;
     var user = models.User.build({ username: req.body.user.username,
-                                   password: req.body.user.password
+                                   password: req.body.user.password,
+                                   AuthorId: authorId
                                 });
 
     // El login debe ser unico:
@@ -58,7 +61,7 @@ exports.create = function(req, res, next) {
                 res.render('users/new', { user: user });
             } else {
                 // Guardar en la BBDD
-                return user.save({fields: ["username", "password", "salt"]})
+                return user.save({fields: ["username", "password", "salt", "AuthorId"]})
                     .then(function(user) { // Renderizar pagina de usuarios
                         req.flash('success', 'Usuario creado con éxito.');
                         res.redirect('/session'); //redirección a la página de login
