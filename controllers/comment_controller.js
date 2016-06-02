@@ -4,10 +4,10 @@ var Sequelize = require('sequelize');
 
 // GET /quizzes/:quizId/comments/new
 exports.new = function(req, res, next) {
-  var comment = models.Comment.build({text: ""});
+  var comment = models.Comment.build({text: "", AuthorId: ""});
 
   res.render('comments/new', { comment: comment, 
-  	                           quiz: req.quiz
+  	                           quiz: req.quiz,
   	                         });
 };
 
@@ -16,7 +16,8 @@ exports.new = function(req, res, next) {
 exports.create = function(req, res, next) {
   var comment = models.Comment.build(
       { text:   req.body.comment.text,          
-        QuizId: req.quiz.id
+        QuizId: req.quiz.id,
+        AuthorId: req.session.user.id
       });
 
   comment.save()
@@ -30,6 +31,7 @@ exports.create = function(req, res, next) {
       for (var i in error.errors) {
           req.flash('error', error.errors[i].value);
       };
+
 
       res.render('comments/new', { comment: comment,
       	                           quiz:    req.quiz});
