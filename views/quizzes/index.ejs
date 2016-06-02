@@ -1,23 +1,24 @@
-
-    <p><a href="/quizzes"> Comience a jugar. </a></p>
-    <table>
-  <% for(var i in quizzes){ %>
-    <tr>
-      <td>
-        <a href="/quizzes/<%= quizzes[i].id %>"><%= quizzes[i].question %></a>
-      </td>
-      <td>
-           <a href="/quizzes/<%= quizzes[i].id %>/edit"><button>editar</button></a>
-         </td>
-      <td>
-            <a href="/quizzes/<%= quizzes[i].id %>?_method=DELETE" 
-               onClick="return confirm('Borrar: <%= quizzes[i].question %>');">
-               <button>borrar</button>
-            </a>
+<table>
+  <% for (var i in quizzes) { %>        
+     <tr>
+        <td>
+           <a href="/quizzes/<%= quizzes[i].id %>"><%= quizzes[i].question %></a>
         </td>
-    </tr>
+        <% if (session.user) { %>
+          <td>
+             <a href="/quizzes/<%= quizzes[i].id %>/edit"><button>editar</button></a>
+          </td>
+          <td>
+             <a href="/quizzes/<%= quizzes[i].id %>?_method=DELETE" 
+                onClick="return confirm('Borrar: <%= quizzes[i].question %>');">
+                <button>borrar</button>
+             </a>
+          </td>
+        <% } %>
+     </tr> 
   <% } %>
 </table>
-  </body>
-  <footer><a href="https://github.com/miguelsmartin/quiz">Repositorio GitHub de quiz</a></footer>
-</html>
+
+<% if (session.user) { %>
+  <a href="/quizzes/new"><button type="button">Crear pregunta</button></a>
+<% } %>
