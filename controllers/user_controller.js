@@ -46,10 +46,8 @@ exports.new = function(req, res, next) {
 // POST /users
 exports.create = function(req, res, next) {
 
-    var authorId = req.session.user && req.session.user.id || 0;
-    var user = models.User.build({ username: req.body.user.username,
-                                   password: req.body.user.password,
-                                   AuthorId: authorId
+     var user = models.User.build({ username: req.body.user.username,
+                                   password: req.body.user.password
                                 });
 
     // El login debe ser unico:
@@ -90,7 +88,7 @@ exports.edit = function(req, res, next) {
 // PUT /users/:id
 exports.update = function(req, res, next) {
 
-    // req.user.username  = req.body.user.username; // No se permite su edicion
+    req.user.username  = req.body.user.username; // No se permite su edicion
     req.user.password  = req.body.user.password;
 
     // El password no puede estar vacio

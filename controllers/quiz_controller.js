@@ -36,6 +36,21 @@ exports.index = function(req, res, next) {
 	}
 };
 
+// MW que permite acciones solamente si el usuario logeado es admin o es el autor del quiz.
+exports.ownershipRequired = function(req, res, next){
+
+    var isAdmin      = req.session.user.isAdmin;
+    var quizAuthorId = req.quiz.AuthorId;
+    var loggedUserId = req.session.user.id;
+
+    if (isAdmin || quizAuthorId === loggedUserId) {
+        next();
+    } else {
+      console.log('Operación prohibida: El usuario logeado no es el autor del quiz, ni un administrador.');
+      res.send(403);
+    }
+};
+
 
 // GET /quizzes/:id
 exports.show = function(req, res, next) {
@@ -72,7 +87,7 @@ exports.show = function(req, res, next) {
 
 // Autoload el quiz asociado a :quizId
  exports.load = function(req, res, next, quizId) { //SIEMPRE QUE QUIZID
- 	models.Quiz.findById(quizId, {include: [models.Comment]}) //BUSCO EL QUIZ CON ID QUIZID Y ME DEVUELVE
+ 	models.Quiz.findById(quizId, {include: [models.Comment]}) //SOLICITO QUIZ CON QUIZID Y LE AÑADO SUS COMENTARIOS EN PROPIEDAD COMMENTS
    		.then(function(quiz) {
        		if (quiz) {
          		req.quiz = quiz;
@@ -92,8 +107,12 @@ exports.show = function(req, res, next) {
  
  // POST /quizzes/create
  exports.create = function(req, res, next) {
-   var quiz = models.Quiz.build({ question: req.body.quiz.question, //body en POST
-   	                             answer:   req.body.quiz.answer} );
+   var authorId = req.session.user && req.session.user.id || 0;
+
+  var quiz = models.Quiz.build({ question: req.body.quiz.question, //body en post
+  	                             answer:   req.body.quiz.answer,
+                                 AuthorId: authorId } );
+
  
  // guarda en DB los campos pregunta y respuesta de quiz
    quiz.save({fields: ["question", "answer"]})

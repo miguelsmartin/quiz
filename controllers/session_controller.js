@@ -4,12 +4,67 @@ var url = require('url');
 
 
 
+// Middleware: Se requiere hacer login.
+//
+// Si el usuario ya hizo login anteriormente entonces existira 
+// el objeto user en req.session, por lo que continuo con los demas 
+// middlewares o rutas.
+// Si no existe req.session.user, entonces es que aun no he hecho 
+// login, por lo que me redireccionan a una pantalla de login. 
+// Guardo en redir cual es mi url para volver automaticamente a 
+// esa url despues de hacer login; pero si redir ya existe entonces
+// conservo su valor.
+// 
 exports.loginRequired = function (req, res, next) {
     if (req.session.user) {
         next();
     } else {
         res.redirect('/session?redir=' + (req.param('redir') || req.url));
     }
+};
+
+// MW que permite gestionar solamente si el usuario logeado es admin.
+exports.adminRequired = function(req, res, next){
+
+    var isAdmin      = req.session.user.isAdmin;
+
+    if (isAdmin) {
+        next();
+    } else {
+      console.log('Ruta prohibida: el usuario logeado no es administrador.');
+      res.send(403);    }
+};
+
+// MW que permite gestionar un usuario solamente si el usuario logeado es:
+//   - admin 
+//   - o es el usuario a gestionar.
+exports.adminOrMyselfRequired = function(req, res, next){
+
+    var isAdmin      = req.session.user.isAdmin;
+    var userId       = req.user.id;
+    var loggedUserId = req.session.user.id;
+
+    if (isAdmin || userId === loggedUserId) {
+        next();
+    } else {
+      console.log('Ruta prohibida: no es el usuario logeado, ni un administrador.');
+      res.send(403);    }
+};
+
+// MW que permite gestionar un usuario solamente si el usuario logeado es:
+//   - admin
+//   - y no es el usuario a gestionar.
+exports.adminAndNotMyselfRequired = function(req, res, next){
+
+    var isAdmin      = req.session.user.isAdmin;
+    var userId       = req.user.id;
+    var loggedUserId = req.session.user.id;
+
+    if (isAdmin || userId === loggedUserId) {
+        next();
+    } else {
+      console.log('Ruta prohibida: no es el usuario logeado, ni un administrador.');
+      res.send(403);    }
 };
 
 
@@ -60,9 +115,9 @@ exports.create = function(req, res, next) {
     authenticate(login, password)
         .then(function(user) {
             if (user) {
-    	        // Crear req.session.user y guardar campos id y username
+    	        // Crear req.session.user y guardar campos id y username Y ADMIN (para luego ver si tengo acceso a todo) 
     	        // La sesión se define por la existencia de: req.session.user
-    	        req.session.user = {id:user.id, username:user.username};
+    	        req.session.user = {id:user.id, username:user.username, isAdmin:user.isAdmin};
 
                 res.redirect(redir); // redirección a redir
             } else {
