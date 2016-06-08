@@ -15,7 +15,7 @@ exports.index = function(req, res, next) {
 
     if(req.query.search !== undefined){
     	var searchAux = req.query.search.replace("","%");
-    	models.Quiz.findAll({where: {question: {$like: ('%' + searchAux + '%')}}, order: ['question']}).then(
+    	models.Quiz.findAll({where: {question: {$like: ('%' + searchAux + '%')}}, order: ['question'], include: [models.Comment, models.Attachment]}).then(
 			function(quizzes) {
 			res.render('quizzes/index.ejs', { quizzes: quizzes});
 		})
